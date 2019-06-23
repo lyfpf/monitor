@@ -1,0 +1,20 @@
+define({
+  "name": "权限接口",
+  "version": "1.0.0",
+  "description": "权限接口描述",
+  "title": "Custom apiDoc browser title",
+  "url": "http://localhost:8585/api",
+  "sampleUrl": "http://localhost:8585/api",
+  "template": {
+    "withCompare": true,
+    "withGenerator": true
+  },
+  "defaultVersion": "0.0.0",
+  "apidoc": "0.3.0",
+  "generator": {
+    "name": "apidoc",
+    "time": "2019-06-22T03:58:12.116Z",
+    "url": "http://apidocjs.com",
+    "version": "0.17.7"
+  }
+});
