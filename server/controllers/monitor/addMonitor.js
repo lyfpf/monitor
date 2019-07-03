@@ -5,8 +5,10 @@ module.exports = async (ctx) => {
   
   const {url, comment, status, email, title} = ctx.request.body
 
-  const nowTime = new Date().getTime()
+  const nowTime = new Date().getTime() / 1000
   
+  console.log(nowTime)
+
   try{
     await mysql('monitor').insert({
       url,

@@ -8,10 +8,9 @@ module.exports = async (ctx) => {
   const total = await mysql('errorInfo').select()
 
   const list = await mysql('errorInfo')
-                      // .where(function() {
-                      //   this.where('title', 'like', `%${title}%`)
-                      //   .where('url', 'like', `%${url}%`)
-                      // })
+                      .where(function() {
+                        this.where('title', 'like', `%${title}%`)
+                      })
                       .limit(pageSize)
                       .offset(Number(page - 1) * pageSize)
                       .select()

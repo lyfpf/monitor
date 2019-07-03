@@ -14,7 +14,7 @@
             <el-form-item label="接收邮箱" prop="email">
               <el-input v-model="ruleForm.email" placeholder="邮箱"/>
             </el-form-item>
-            <el-form-item label="接收邮箱" prop="email">
+            <el-form-item label="描述" prop="email">
               <el-input
                 :autosize="{ minRows: 2, maxRows: 4}"
                 v-model="ruleForm.comment"
@@ -25,11 +25,11 @@
               <el-select v-model="ruleForm.status" placeholder="状态">
                 <el-option :value="1" label="监控中"/>
                 <el-option :value="0" label="已下线"/>
+                <el-option :value="2" label="已停止"/>
               </el-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('ruleForm')">提 交</el-button>
-              <el-button @click="resetForm('ruleForm')">重 置</el-button>
             </el-form-item>
           </el-form>
         </div>

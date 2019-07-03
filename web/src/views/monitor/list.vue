@@ -10,22 +10,25 @@
       <el-table-column :index="indexMethod" label="ID" type="index" width="60"/>
       <el-table-column prop="title" label="标题"/>
       <el-table-column prop="url" label="监控地址"/>
-      <el-table-column label="状态" width="100">
+      <el-table-column label="状态" width="150">
         <template slot-scope="scope">
-          <span class="update-status" @click="UpdateStatus(scope.row)">
-            <i v-if="scope.row.status" class="el-icon-circle-check user-status enabled"/>
-            <i v-else class="el-icon-circle-close user-status disabled"/>
-          </span>
+          {{ status[scope.row.status] }}
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column prop="updateTime" label="更新时间" />
+      <el-table-column prop="email" label="通知邮箱" />
+      <el-table-column prop="comment" label="描述"/>
+      <el-table-column label="创建时间">
+        <template slot-scope="scope">
+          {{ formatDate(new Date(scope.row.createTime * 1000), 'yyyy-MM-dd hh:mm:ss') }}
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间">
+        <template slot-scope="scope">
+          {{ formatDate(new Date(scope.row.createTime * 1000), 'yyyy-MM-dd hh:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="success"
-            @click="setRoles(scope.row)">授权角色</el-button>
           <el-button
             size="mini"
             type="primary"
@@ -33,7 +36,7 @@
           <el-button
             size="mini"
             type="danger"
-            @click="DeleteUser(scope.$index, scope.row)">删除</el-button>
+            @click="DeleteMonitor(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -51,7 +54,14 @@
 </template>
 
 <script>
-import { getMonitorList } from '@/api/monitor'
+import { getMonitorList, deleteMonitor } from '@/api/monitor'
+import { formatDate } from '@/utils/index'
+
+const status = {
+  '0': '已下线',
+  '1': '监控中',
+  '2': '已停止'
+}
 
 export default {
   data() {
@@ -59,11 +69,18 @@ export default {
       total: 0,
       loading: false,
       tableData: [],
+      status,
       params: {
         title: '',
         page: 1,
         pageSize: 10
-      }
+      },
+      formatDate
+    }
+  },
+  watch: {
+    'params.title'() {
+      this.GetMonitorList()
     }
   },
   mounted() {
@@ -71,12 +88,12 @@ export default {
   },
   methods: {
     handleSizeChange(pageSize) {
-      this.page = 1
-      this.pageSize = pageSize
+      this.params.page = 1
+      this.params.pageSize = pageSize
       this.GetMonitorList()
     },
     handleCurrentChange(page) {
-      this.page = page
+      this.params.page = page
       this.GetMonitorList()
     },
     indexMethod(index) {
@@ -94,6 +111,22 @@ export default {
       getMonitorList({ ...this.params }).then(res => {
         this.tableData = res.data
         this.total = res.total
+      })
+    },
+    DeleteMonitor(index, { id }) {
+      this.$confirm('此操作将永久删除此条数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteMonitor({ id: [id] }).then(res => {
+          this.tableData.splice(index, 1)
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success'
+          })
+        })
       })
     }
   }

@@ -31,3 +31,11 @@ export function getByIdMonitor(params) {
     params
   })
 }
+
+export function deleteMonitor(data) {
+  return request({
+    url: '/monitor/delete_monitor',
+    method: 'post',
+    data
+  })
+}

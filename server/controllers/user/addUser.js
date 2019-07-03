@@ -42,8 +42,7 @@ module.exports = async (ctx) => {
       status,
       avatar: '/static/default.jpg',
       createTime,
-      loginCount: 0,
-      isDelete: 0
+      loginCount: 0
     })
     ctx.body = Tips[0]
   }

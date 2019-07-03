@@ -29,10 +29,10 @@
       </el-table-column>
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             size="mini"
             type="success"
-            @click="setRoles(scope.row)">授权角色</el-button>
+            @click="setRoles(scope.row)">授权角色</el-button> -->
           <el-button
             size="mini"
             type="primary"

@@ -7,7 +7,11 @@
       <el-table-column :index="indexMethod" label="ID" type="index" width="60"/>
       <el-table-column prop="title" label="标题"/>
       <el-table-column prop="url" label="捕获地址"/>
-      <el-table-column prop="time" label="捕获时间" />
+      <el-table-column label="捕获时间">
+        <template slot-scope="scope">
+          {{ formatDate(new Date(scope.row.time * 1000), 'yyyy-MM-dd hh:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column prop="info" label="错误信息" />
       <el-table-column prop="email" label="通知邮箱" />
       <el-table-column label="操作" width="150">
@@ -34,6 +38,7 @@
 
 <script>
 import { getErrorInfoList, deleteErrorInfo } from '@/api/errotInfo'
+import { formatDate } from '@/utils/index'
 
 export default {
   data() {
@@ -41,10 +46,17 @@ export default {
       total: 0,
       loading: false,
       tableData: [],
+      formatDate,
       params: {
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        title: ''
       }
+    }
+  },
+  watch: {
+    'params.title'() {
+      this.getErrorInfoList()
     }
   },
   mounted() {
@@ -52,12 +64,12 @@ export default {
   },
   methods: {
     handleSizeChange(pageSize) {
-      this.page = 1
-      this.pageSize = pageSize
+      this.params.page = 1
+      this.params.pageSize = pageSize
       this.getErrorInfoList()
     },
     handleCurrentChange(page) {
-      this.page = page
+      this.params.page = page
       this.getErrorInfoList()
     },
     indexMethod(index) {
@@ -70,7 +82,7 @@ export default {
       })
     },
     deleteErrorInfo(index, { id }) {
-      this.$confirm('此操作将永久删除条消息, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除此条消息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

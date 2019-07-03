@@ -32,20 +32,17 @@ async function main({ url, title, email }){
             <h3>地址：<a href="${url}">${url}</a>页面发生异常</h3>
           `
   })
-
   console.log("邮件发送成功：", info.messageId);
-
 }
 
 async function monitor() {
-//   setInterval(() => {
+  setInterval(async () => {
     const data = await mysql('monitor').where('status', 1).select()
     for (let i = 0; i < data.length; i++) {
-      http.get(data[i].url).then(res => {
-        console.log('页面正常')
+      http.get(data[i].url).then(() => {
       }).catch(async err => {
         const { url, title, id, email  } = data[i]
-        const nowTime = new Date().getTime()
+        const nowTime = new Date().getTime() * 1000
 
         main({ ...data[i] }).catch(console.error)
         await mysql('errorInfo').insert({
@@ -59,7 +56,7 @@ async function monitor() {
         await mysql('monitor').where({id}).update({status: 2})
       })
     }
-//   }, 10000)
+  }, 10000)
 
 }
 

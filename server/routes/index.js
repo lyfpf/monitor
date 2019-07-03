@@ -36,6 +36,8 @@ router.post('/monitor/add_monitor', controllers.monitor.addMonitor)
 
 router.post('/monitor/update_monitor', controllers.monitor.updateMonitor)
 
+router.post('/monitor/delete_monitor', controllers.monitor.deleteMonitor)
+
 // errorInfo
 router.get('/errorInfo/all_info', controllers.errorInfo.allInfo)
 
