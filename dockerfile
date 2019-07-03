@@ -11,7 +11,7 @@ COPY /server /server
 # RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 #安装依赖
-RUN npm i
+RUN npm install
 
 #需要开启的端口
 EXPOSE 8585
