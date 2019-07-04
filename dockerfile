@@ -8,10 +8,10 @@ WORKDIR /server
 COPY /server /server
 
 # 安装淘宝镜像
-# RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
+RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 #安装依赖
-RUN npm install
+RUN cnpm install
 
 #需要开启的端口
 EXPOSE 8585
