@@ -1,6 +1,7 @@
 const axios = require('axios')
 const mysql = require('../mysql')
 const nodemailer = require("nodemailer")
+const ChatBot = require('dingtalk-robot-sender')
 
 const http = axios.create({
   timeout: 5000,
@@ -9,7 +10,34 @@ const http = axios.create({
   }
 })
 
-async function main({ url, title, email }){
+const robot = new ChatBot({
+  webhook: 'https://oapi.dingtalk.com/robot/send?access_token=378ad1ae8ce44250a5d69a9c2d038defff973e8233a3bd92e1ccaec27bdba648'
+})
+
+function sendDingtalk({ url, title }, message) {
+  const content = `
+    页面标题：${title}\n
+    地址：${url}\n
+    错误信息：${message}
+  `
+  let textContent = {
+    "msgtype": "text", 
+    "text": {
+      content
+    }, 
+    "at": {
+      "atMobiles": [
+        "15016584603"
+      ], 
+      "isAtAll": false
+    }
+  }
+  robot.send(textContent).then(() => {
+    console.log("钉钉提醒发送成功：")
+  })
+}
+
+async function sendEmail({ url, title, email }){
 
   let transporter = nodemailer.createTransport({
     service: 'smtp.163.com',
@@ -44,7 +72,8 @@ async function monitor() {
         const { url, title, id, email  } = data[i]
         const nowTime = new Date().getTime() * 1000
 
-        main({ ...data[i] }).catch(console.error)
+        sendEmail({ ...data[i] }).catch(console.error)
+        sendDingtalk({ ...data[i] }, err.message)
         await mysql('errorInfo').insert({
           mid: id,
           url,
@@ -56,7 +85,7 @@ async function monitor() {
         await mysql('monitor').where({id}).update({status: 2})
       })
     }
-  }, 10000)
+  }, 60000)
 
 }
 
